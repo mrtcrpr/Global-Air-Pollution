@@ -71,8 +71,43 @@ group by Country, City
 
 select * from air
 
+-- First I want to search 'Hazardous' AQI Values.
 
+select 
+Country,
+count(*)
+from air
+where [AQI Category] = 'Hazardous'
+group by Country
+order by COUNT(*) desc
+-- Country the worst weather is definitely India. After that Pakistan. India has 94, Pakistan has 12 'Hazardous' values. Chile and USA are following this list.
 
+-- When I deepen my analysis, India, China and Pakistan have terrible air quality.
+
+select 
+Country,
+count(*)
+from air
+where [AQI Category] = 'Very Unhealty'
+group by Country
+order by COUNT(*) desc
+
+select 
+Country,
+count(*)
+from air
+where [AQI Category] = 'Unhealty'
+group by Country
+order by COUNT(*) desc
+
+select 
+Country,
+count(*)
+from air
+where [AQI Category] = 'Unhealthy for Sensitive Groups'
+group by Country
+order by COUNT(*) desc
+-- This countries take the lead about bad air conditions. 
 
 
 
