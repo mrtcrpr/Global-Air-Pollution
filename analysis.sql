@@ -48,14 +48,14 @@ when [NO2 AQI Value] between 150 and 200 then 'Unhealty'
 when [NO2 AQI Value] between 201 and 299 then 'Very Unhealty'
 when [NO2 AQI Value] >= 300 then 'Hazardous' end as 'NO2 AQI Category',
 
-[PM2#5 AQI Value],
+[PM2.5 AQI Value],
 CASE 
-when [PM2#5 AQI Value] <= 50 then 'Good'
-when [PM2#5 AQI Value] between 51 and 99 then 'Moderate'
-when [PM2#5 AQI Value] between 100 and 149 then 'Unhealthy for Sensitive Groups'
-when [PM2#5 AQI Value] between 150 and 200 then 'Unhealty'
-when [PM2#5 AQI Value] between 201 and 299 then 'Very Unhealty'
-when [PM2#5 AQI Value] >= 300 then 'Hazardous' end as 'PM2#5 AQI Category'
+when [PM2.5 AQI Value] <= 50 then 'Good'
+when [PM2.5 AQI Value] between 51 and 99 then 'Moderate'
+when [PM2.5 AQI Value] between 100 and 149 then 'Unhealthy for Sensitive Groups'
+when [PM2.5 AQI Value] between 150 and 200 then 'Unhealty'
+when [PM2.5 AQI Value] between 201 and 299 then 'Very Unhealty'
+when [PM2.5 AQI Value] >= 300 then 'Hazardous' end as 'PM2.5 AQI Category'
 from
 (select  
 country,
@@ -71,8 +71,12 @@ group by Country, City
 
 select * from air
 
--- First I want to search 'Hazardous' AQI Values.
+-- I have a few questions for create a analysis.
 
+-- 1. Which countries have the worst air quality? (This dataset has 4 different air quality scale about bad air quality.)
+--Note: We have more than 5 countries about bad air qualities. You can find the other countries in data visualization section.
+
+-- The first and worst is hazardous.
 select 
 Country,
 count(*)
@@ -80,10 +84,14 @@ from air
 where [AQI Category] = 'Hazardous'
 group by Country
 order by COUNT(*) desc
--- Country the worst weather is definitely India. After that Pakistan. India has 94, Pakistan has 12 'Hazardous' values. Chile and USA are following this list.
+/*
+India --> 94
+Pakistan --> 12
+Chile --> 1
+USA --> 1
+*/
 
--- When I deepen my analysis, India, China and Pakistan have terrible air quality.
-
+-- The second is very unhealty records.
 select 
 Country,
 count(*)
@@ -91,7 +99,16 @@ from air
 where [AQI Category] = 'Very Unhealty'
 group by Country
 order by COUNT(*) desc
+/*
+India --> 433
+Pakistan --> 49
+Mexico --> 35
+South Africa --> 15
+Indonesia --> 12 
+records about 'Very Unhealty' air quality.
+*/
 
+-- The other one is unhealty.
 select 
 Country,
 count(*)
@@ -99,7 +116,16 @@ from air
 where [AQI Category] = 'Unhealty'
 group by Country
 order by COUNT(*) desc
+/*
+India --> 732
+China --> 301
+Pakistan --> 204
+Mexico --> 68
+Indonesia --> 38 
+records about 'Unhealty' air quality.
+*/
 
+-- The last one is unhealty for sensitive groups.
 select 
 Country,
 count(*)
@@ -107,7 +133,15 @@ from air
 where [AQI Category] = 'Unhealthy for Sensitive Groups'
 group by Country
 order by COUNT(*) desc
--- This countries take the lead about bad air conditions. 
+/*
+India --> 558
+China --> 254
+Brazil --> 85
+USA --> 81
+Mexico --> 64
+records about 'Unhealty for Sensitive Groups' air quality.
+*/
+
 
 
 
