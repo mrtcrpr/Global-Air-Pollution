@@ -8,7 +8,24 @@ where Country is null or City is null
 
 -- All cities have 5 or 6 values. This will be a problem in future. Therefore we need to get average this values.
 
-with air as (
+-- First we need to create another table, this table will call 'air' and we use insert into for insert all the distinct values.
+
+create table air (
+Country nvarchar(255),
+City nvarchar(255),
+"AQI Value" float,
+"AQI Category" nvarchar(255),
+"CO AQI Value" float,
+"CO AQI Category" nvarchar(255),
+"Ozone AQI Value" float,
+"Ozone AQI Category" nvarchar(255),
+"NO2 AQI Value" float,
+"NO2 AQI Category" nvarchar(255),
+"PM2.5 AQI Value" float,
+"PM2.5 AQI Category" nvarchar(255)
+)
+
+with try_air as (
 select
 Country,
 City,
@@ -64,12 +81,13 @@ round(avg([AQI Value]), 0) as "AQI Value",
 round(avg([CO AQI Value]), 0) as "CO AQI Value",
 round(avg([Ozone AQI Value]), 0) as "Ozone AQI Value",
 round(avg([NO2 AQI Value]), 0) as "NO2 AQI Value",
-round(avg([PM2#5 AQI Value]), 0) as "PM2#5 AQI Value"
+round(avg([PM2#5 AQI Value]), 0) as "PM2.5 AQI Value"
 from airs
 group by Country, City
 )as den)
 
-select * from air
+insert into air
+select * from try_air
 
 -- I have a few questions for create a analysis.
 
@@ -144,10 +162,21 @@ records about 'Unhealty for Sensitive Groups' air quality.
 
 
 -- 2. Which countries have the best air quality?
-
-
-
-
+select 
+Country,
+Count(*)
+from air
+where [AQI Category] = 'Good'
+group by Country
+order by Count(*) desc
+/*
+Brazil --> 1178
+Russian Federation --> 1122
+Germany --> 925
+USA --> 709
+Spain --> 396
+records about 'Good' air quality.
+*/
 
 
 
